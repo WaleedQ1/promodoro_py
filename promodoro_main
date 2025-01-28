@@ -1,0 +1,121 @@
+from tkinter import *
+from playsound3 import playsound
+# ---------------------------- CONSTANTS ------------------------------- #
+PINK = "#e2979c"
+RED = "#e7305b"
+GREEN = "#9bdeac"
+YELLOW = "#f7f5dd"
+MY_COLOR = '#6A42C2'
+FONT_NAME = "Courier"
+
+WORK_MIN = 25
+WORK_SEC = 0
+
+SHORT_BREAK_MIN = 5
+SHORT_BREAK_SEC = 0
+LONG_BREAK_MIN = 20
+LONG_BREAK_SEC = 0
+BREAK_COUNTER = 1
+
+
+# ---------------------------- TIMER RESET ------------------------------- #
+def reset_counting():
+    canvas.itemconfig(timer_,text='00:00')
+
+# ---------------------------- TIMER MECHANISM -------------------------------#
+def start_counting():
+    count_down(sec=WORK_SEC , min=WORK_MIN)
+# ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
+def count_down(sec, min):
+    timer_label.config(text='Timer')
+    canvas.itemconfig(timer_,text=f'{min:02}:{sec:02}')
+    if min == 0 and sec == 0 :
+        check_mark.append('✔')
+        check_symbol.config(text=check_mark,font=('Arial', 9,'bold'))
+        break_time(b_sec=SHORT_BREAK_SEC,b_min=SHORT_BREAK_MIN,break_counter=BREAK_COUNTER)
+        playsound("alert-positive.mp3")
+    else:
+        if min !=0:
+            if sec == 0 :
+                sec = 60
+                min-=1
+        window.after(1000, count_down, sec - 1, min)
+
+def break_time (b_sec,b_min,break_counter):
+    global BREAK_COUNTER, set_mark, check_mark
+    if break_counter == 5 :
+        long_break(LONG_BREAK_SEC,LONG_BREAK_MIN)
+        check_mark = []
+        set_mark.append('🌸')
+        check_symbol.config(text=check_mark, font=('Arial', 9, 'bold'))
+        set_mark_symbol.config(text=set_mark, font=('Arial', 9, 'bold'))
+        BREAK_COUNTER = 0
+    else:
+        timer_label.config(text='Break')
+        canvas.itemconfig(timer_, text=f'{b_min:02}:{b_sec:02}')
+        if b_min == 0 and b_sec == 0 :
+            BREAK_COUNTER +=1
+            start_counting()
+            playsound("chimes.wav")
+        else:
+            if b_min !=0:
+                if b_sec == 0:
+                    b_sec = 60
+                    b_min-=1
+            window.after(1000,break_time,b_sec - 1 ,b_min,break_counter)
+
+def long_break(lb_sec,lb_min):
+    # global check_mark , set_mark
+    # check_mark = []
+    # set_mark.append('🌸')
+    # set_mark_symbol.config(text=set_mark, font=('Arial', 9, 'bold'))
+
+    timer_label.config(text='Long Break')
+    canvas.itemconfig(timer_, text=f'{lb_min:02}:{lb_sec:02}')
+    if lb_min == 0 and lb_sec == 0:
+        start_counting()
+        playsound("chimes.wav")
+    else:
+        if lb_min != 0:
+            if lb_sec == 0:
+                b_sec = 60
+                lb_min -= 1
+        window.after(1000, long_break, lb_sec - 1, lb_min)
+# ---------------------------- UI SETUP ------------------------------- #
+
+window = Tk()
+window.title("promodoro")
+window.config(pady=50,padx=80,bg= MY_COLOR)
+
+canvas = Canvas(width=200, height=224,bg= MY_COLOR, highlightthickness=0)
+tomato_img = PhotoImage(file='tomato.png')
+canvas.create_image(100,112,image =tomato_img)
+
+
+check_mark = []
+set_mark = []
+
+check_symbol = Label(text =' ',padx=1,pady=1,bg=MY_COLOR,fg='white')
+check_symbol.grid(column=1,row=4)
+
+set_mark_symbol = Label(text = '', pady=1,padx=1,bg=MY_COLOR,fg='white')
+set_mark_symbol.grid(column=1,row=5)
+
+timer_=canvas.create_text(100,140,text='00:00',fill='white', font=(FONT_NAME,30,'bold'))
+canvas.grid(column=1,row=2)
+
+timer_label = (Label(text='Timer',font=('times new roman',30,'bold'),bg=MY_COLOR,fg=GREEN))
+timer_label.grid(column=1,row=1)
+
+start_button = Button(text='Start',command=start_counting).grid(column=0,row=3)
+reset_button = Button(text='Reset',command=reset_counting).grid(column = 3,row = 3)
+
+
+
+
+
+
+
+
+
+window.mainloop()
