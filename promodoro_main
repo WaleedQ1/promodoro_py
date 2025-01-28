@@ -8,13 +8,13 @@ YELLOW = "#f7f5dd"
 MY_COLOR = '#6A42C2'
 FONT_NAME = "Courier"
 
-WORK_MIN = 0
-WORK_SEC = 5
+WORK_MIN = 25
+WORK_SEC = 0
 
-SHORT_BREAK_MIN = 0
-SHORT_BREAK_SEC = 5
-LONG_BREAK_MIN = 0
-LONG_BREAK_SEC = 5
+SHORT_BREAK_MIN = 5
+SHORT_BREAK_SEC = 0
+LONG_BREAK_MIN = 20
+LONG_BREAK_SEC = 0
 BREAK_COUNTER = 1
 TIMER = None
 SHORT_BREAK = None
@@ -23,7 +23,15 @@ Long_BREAK = None
 
 # ---------------------------- TIMER RESET ------------------------------- #
 def reset_counting():
+    global set_mark,check_mark
     canvas.itemconfig(timer_,text='00:00')
+    timer_label.config(text='Timer')
+    check_mark = []
+    set_mark = []
+
+    check_symbol.config(text=check_mark, font=('Arial', 9, 'bold'))
+    set_mark_symbol.config(text=set_mark, font=('Arial', 9, 'bold'))
+
     try:
         window.after_cancel(TIMER)
         window.after_cancel(SHORT_BREAK)
