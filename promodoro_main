@@ -33,7 +33,9 @@ def count_down(sec, min):
         check_mark.append('✔')
         check_symbol.config(text=check_mark,font=('Arial', 9,'bold'))
         break_time(b_sec=SHORT_BREAK_SEC,b_min=SHORT_BREAK_MIN,break_counter=BREAK_COUNTER)
-        playsound("alert-positive.mp3")
+# sound effect when the work time is over
+        playsound("alert-positive.mp3")  
+
     else:
         if min !=0:
             if sec == 0 :
@@ -56,6 +58,8 @@ def break_time (b_sec,b_min,break_counter):
         if b_min == 0 and b_sec == 0 :
             BREAK_COUNTER +=1
             start_counting()
+
+# sound effect when the short break time is over
             playsound("chimes.wav")
         else:
             if b_min !=0:
@@ -74,6 +78,8 @@ def long_break(lb_sec,lb_min):
     canvas.itemconfig(timer_, text=f'{lb_min:02}:{lb_sec:02}')
     if lb_min == 0 and lb_sec == 0:
         start_counting()
+
+# sound effect when the long break time is over
         playsound("chimes.wav")
     else:
         if lb_min != 0:
